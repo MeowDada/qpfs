@@ -37,7 +37,7 @@ It will open a drive with human readable name 123.
 			return err
 		}
 
-		d, err := ipfstor.OpenDrive(ctx, api, addr)
+		d, err := ipfstor.OpenDrive(ctx, api, c.Args().First())
 		if err != nil {
 			return err
 		}
