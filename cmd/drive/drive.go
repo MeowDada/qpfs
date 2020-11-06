@@ -18,5 +18,6 @@ var driveCmd = &cli.Command{
 		newCmd,
 		statCmd,
 		rmCmd,
+		openCmd,
 	},
 }
