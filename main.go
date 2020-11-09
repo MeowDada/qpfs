@@ -5,6 +5,7 @@ import (
 
 	// Import drive plugin commands.
 	_ "github.com/meowdada/qpfs/cmd/drive"
+	_ "github.com/meowdada/qpfs/cmd/orbitdb"
 )
 
 var Version string

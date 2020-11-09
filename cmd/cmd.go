@@ -34,6 +34,7 @@ repo settings, you might need to configure the below environment variable:
 		getCmd,
 		lsCmd,
 		rmCmd,
+		openCmd,
 	},
 }
 
