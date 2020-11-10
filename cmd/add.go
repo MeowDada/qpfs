@@ -2,52 +2,49 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
-	"github.com/meowdada/ipfstor"
-	"github.com/meowdada/qpfs/pkg/ipfs"
-	cli "github.com/urfave/cli/v2"
+	"github.com/meowdada/ipfstor/drive"
+	"github.com/meowdada/ipfstor/ipfsutil"
+	"github.com/meowdada/ipfstor/options"
+	"github.com/urfave/cli/v2"
 )
 
 var addCmd = &cli.Command{
-	Name:      "add",
-	Usage:     "Upload file to the specific drive",
-	UsageText: "qpfs add <file> <drive>",
-	Description: `Upload file to the specific drive. To any upload files,
-Only basename will be preserved.`,
+	Name:  "add",
+	Usage: "Add local file to the specific drive",
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 2 {
-			return fmt.Errorf("usage: qpfs add <src> <dst>")
+			return fmt.Errorf("usage: qpfs add <file> <resolve>")
 		}
 		return nil
 	},
 	Action: func(c *cli.Context) error {
 		var (
-			ctx   = c.Context
-			addr  = "/ip4/127.0.0.1/tcp/5001"
-			args  = c.Args().Slice()
-			fpath = args[0]
+			ctx     = c.Context
+			args    = c.Args().Slice()
+			fpath   = args[0]
+			resolve = args[1]
 		)
 
-		if c.String("api") != "" {
-			addr = c.String("api")
-		}
-
-		api, err := ipfs.NewAPI(addr)
+		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
 		if err != nil {
 			return err
 		}
 
-		path, err := ipfs.NewDstPath(fpath, args[1])
-		if err != nil {
-			return err
-		}
-
-		d, err := ipfstor.OpenDrive(ctx, api, path.Drive())
+		d, err := drive.Open(ctx, api, resolve, options.OpenDrive().SetDirectory(defaultOrbitDBPath()))
 		if err != nil {
 			return err
 		}
 		defer d.Close(ctx)
 
-		return d.Add(ctx, path.Filename(), fpath)
+		key := filepath.Base(fpath)
+		info, err := d.Add(ctx, key, fpath)
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("Add %s %s\n", key, info.Cid)
+		return nil
 	},
 }

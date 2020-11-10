@@ -800,6 +800,8 @@ github.com/meowdada/ipfstor v0.0.3 h1:6L7dfAmmhviqkeL1Cecgm2B+J40vLwLJR6/XQiUa/8
 github.com/meowdada/ipfstor v0.0.3/go.mod h1:OXd1TucDL2Nok2TvKaOpQ1vNiS1ii9eWizV/LzDXlX0=
 github.com/meowdada/ipfstor v0.0.4 h1:uwCfR96NwwrDLopZSWXci6UJzuQ+Iq05CQqf9nUeEjo=
 github.com/meowdada/ipfstor v0.0.4/go.mod h1:OXd1TucDL2Nok2TvKaOpQ1vNiS1ii9eWizV/LzDXlX0=
+github.com/meowdada/ipfstor v0.0.5 h1:4RqdOVNSEWSfivqqQNpcB+z/RUKPgN19w4Q1f8h1CHs=
+github.com/meowdada/ipfstor v0.0.5/go.mod h1:M2/fww+4ChGywdy4hU9+FuQTiqN1rEz0SpWfVGBbGfQ=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b/go.mod h1:01TrycV0kFyexm33Z7vhZRXopbI8J3TDReVlkTgMUxE=
 github.com/microcosm-cc/bluemonday v1.0.1/go.mod h1:hsXNsILzKxV+sX77C5b8FSuKF00vh2OMYv+xgHpAMF4=
 github.com/miekg/dns v1.1.4/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=

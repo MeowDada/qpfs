@@ -4,51 +4,52 @@ import (
 	"fmt"
 
 	"github.com/dustin/go-humanize"
-	"github.com/meowdada/ipfstor"
-	"github.com/meowdada/qpfs/pkg/ipfs"
+	"github.com/meowdada/ipfstor/drive"
+	"github.com/meowdada/ipfstor/ipfsutil"
+	"github.com/meowdada/ipfstor/options"
 	"github.com/urfave/cli/v2"
 )
 
 var lsCmd = &cli.Command{
-	Name:        "ls",
-	Usage:       "List all existing files under the drive",
-	UsageText:   "qpfs ls <drive>",
-	Description: "List all existing files under the drive. If the driver contains no files, nothing will be returned",
+	Name:  "ls",
+	Usage: "List all existing file in the drive which matches given prefix",
 	Before: func(c *cli.Context) error {
-		if c.Args().Len() != 1 {
-			return fmt.Errorf("specific one drive to list files")
+		if c.Args().Len() > 2 || c.Args().Len() == 0 {
+			return fmt.Errorf("usage: qpfs ls <resolve> <prefix>")
 		}
 		return nil
 	},
 	Action: func(c *cli.Context) error {
 		var (
-			ctx   = c.Context
-			addr  = "/ip4/127.0.0.1/tcp/5001"
-			drive = c.Args().First()
+			ctx     = c.Context
+			resolve = c.Args().First()
+			prefix  string
 		)
 
-		if c.String("api") != "" {
-			addr = c.String("api")
+		if c.Args().Len() > 1 {
+			prefix = c.Args().Slice()[1]
 		}
 
-		api, err := ipfs.NewAPI(addr)
+		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
 		if err != nil {
 			return err
 		}
 
-		d, err := ipfstor.OpenDrive(ctx, api, drive)
+		d, err := drive.Open(ctx, api, resolve, options.OpenDrive().SetDirectory(defaultOrbitDBPath()))
 		if err != nil {
 			return err
 		}
 		defer d.Close(ctx)
 
-		rs, err := d.List(ctx)
+		lr, err := d.List(ctx, prefix)
 		if err != nil {
 			return err
 		}
 
-		for i := range rs {
-			fmt.Printf("%s (%s)\n", rs[i].Key, humanize.IBytes(uint64(rs[i].Size)))
+		fs := lr.Files()
+
+		for i := range fs {
+			fmt.Printf("%s (%s): %s\n", fs[i].Key, fs[i].Cid, humanize.IBytes(uint64(fs[i].Size)))
 		}
 
 		return nil
