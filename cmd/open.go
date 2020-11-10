@@ -42,6 +42,8 @@ var openCmd = &cli.Command{
 		}
 		defer d.Close(ctx)
 
+		fmt.Printf("Open drive: %s\n", d.Address())
+
 		for {
 		}
 
