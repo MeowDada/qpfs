@@ -1,11 +1,14 @@
 package cmd
 
 import (
+	"io"
 	"log"
 	"os"
 	"sort"
 
 	"github.com/urfave/cli/v2"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var mainApp = &cli.App{
@@ -33,4 +36,13 @@ func Register(cmds ...*cli.Command) {
 		return cmds[i].Name < cmds[j].Name
 	})
 	mainApp.Commands = append(mainApp.Commands, cmds...)
+}
+
+func setupZapLogger(w io.Writer, level zapcore.Level) *zap.Logger {
+	encoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	writeSyncer := zapcore.AddSync(w)
+	core := zapcore.NewCore(encoder, writeSyncer, level)
+
+	logger := zap.New(core)
+	return logger
 }

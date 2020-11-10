@@ -9,9 +9,10 @@ require (
 	github.com/ipfs/go-cid v0.0.7
 	github.com/ipfs/go-ipfs-http-client v0.1.0
 	github.com/ipfs/interface-go-ipfs-core v0.4.0
-	github.com/meowdada/ipfstor v0.0.7
+	github.com/meowdada/ipfstor v0.0.9
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/multiformats/go-multiaddr v0.3.1
 	github.com/sevlyar/go-daemon v0.1.5
 	github.com/urfave/cli/v2 v2.3.0
+	go.uber.org/zap v1.15.0
 )

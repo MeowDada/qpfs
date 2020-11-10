@@ -32,7 +32,10 @@ var addCmd = &cli.Command{
 			return err
 		}
 
-		d, err := drive.Open(ctx, api, resolve, options.OpenDrive().SetDirectory(defaultOrbitDBPath()))
+		opts := options.OpenDrive().
+			SetDirectory(defaultOrbitDBPath())
+
+		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {
 			return err
 		}
