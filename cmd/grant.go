@@ -19,7 +19,7 @@ var grantCmd = &cli.Command{
 	},
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 2 {
-			return fmt.Errorf("usage: qpfs grant <user> <permission>")
+			return fmt.Errorf("usage: qpfs grant <resolve> <userID>")
 		}
 		return nil
 	},
