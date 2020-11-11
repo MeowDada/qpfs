@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"berty.tech/go-orbit-db/accesscontroller"
 	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
@@ -116,11 +117,17 @@ var openCmd = &cli.Command{
 			return nil
 		}
 
-		if len(dir) == 0 {
-			dir = defaultOrbitDBPath()
+		ac := &accesscontroller.CreateAccessControllerOptions{
+			Access: map[string][]string{
+				"write": []string{"*"},
+			},
 		}
 
-		d, err := drive.Open(ctx, api, resolve, options.OpenDrive().SetDirectory(dir))
+		opts := options.OpenDrive().
+			SetDirectory(dir).
+			SetAccessController(ac)
+
+		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {
 			return err
 		}
