@@ -810,6 +810,8 @@ github.com/meowdada/ipfstor v0.0.8 h1:y95aC54bYXNbNnBq5ByKCbTb7738pHsZ1My5jbD/y4
 github.com/meowdada/ipfstor v0.0.8/go.mod h1:/FUGzN9dhpVrjAjvahKdN6sd0rkAgGKM4JJhp7P3Rpo=
 github.com/meowdada/ipfstor v0.0.9 h1:EhNJ6kIKHAw+xkCd9ATGFcw1SGQ6GtIOIT4QljSrB2Y=
 github.com/meowdada/ipfstor v0.0.9/go.mod h1:/FUGzN9dhpVrjAjvahKdN6sd0rkAgGKM4JJhp7P3Rpo=
+github.com/meowdada/ipfstor v0.1.0 h1:6h5rcxULJ87YTBxZkemmJqDYzEp9nb4gP5oI9/G1yA0=
+github.com/meowdada/ipfstor v0.1.0/go.mod h1:/FUGzN9dhpVrjAjvahKdN6sd0rkAgGKM4JJhp7P3Rpo=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b/go.mod h1:01TrycV0kFyexm33Z7vhZRXopbI8J3TDReVlkTgMUxE=
 github.com/microcosm-cc/bluemonday v1.0.1/go.mod h1:hsXNsILzKxV+sX77C5b8FSuKF00vh2OMYv+xgHpAMF4=
 github.com/miekg/dns v1.1.4/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=

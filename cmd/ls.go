@@ -11,8 +11,10 @@ import (
 )
 
 var lsCmd = &cli.Command{
-	Name:  "ls",
-	Usage: "List all existing file in the drive which matches given prefix",
+	Name:      "ls",
+	Aliases:   []string{"l"},
+	Usage:     "List all existing file in the drive which matches given prefix",
+	UsageText: "qpfs ls <prefix>",
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() > 2 || c.Args().Len() == 0 {
 			return fmt.Errorf("usage: qpfs ls <resolve> <prefix>")

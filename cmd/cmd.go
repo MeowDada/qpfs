@@ -17,6 +17,8 @@ var mainApp = &cli.App{
 	Commands: []*cli.Command{
 		openCmd,
 		addCmd,
+		grantCmd,
+		revokeCmd,
 		lsCmd,
 	},
 }

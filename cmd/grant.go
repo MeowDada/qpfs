@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/ipfsutil"
@@ -10,14 +9,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var addCmd = &cli.Command{
-	Name:      "add",
-	Aliases:   []string{"a"},
-	Usage:     "Add local file to the specific drive",
-	UsageText: "qpfs add <file> <resolve>",
+var grantCmd = &cli.Command{
+	Name:      "grant",
+	Aliases:   []string{"g"},
+	Usage:     "Grant write permission to specific user",
+	UsageText: "qpfs grant <resolve> <userID>",
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 2 {
-			return fmt.Errorf("usage: qpfs add <file> <resolve>")
+			return fmt.Errorf("usage: qpfs grant <user> <permission>")
 		}
 		return nil
 	},
@@ -25,8 +24,8 @@ var addCmd = &cli.Command{
 		var (
 			ctx     = c.Context
 			args    = c.Args().Slice()
-			fpath   = args[0]
-			resolve = args[1]
+			resolve = args[0]
+			userID  = args[1]
 		)
 
 		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
@@ -43,13 +42,12 @@ var addCmd = &cli.Command{
 		}
 		defer d.Close(ctx)
 
-		key := filepath.Base(fpath)
-		info, err := d.Add(ctx, key, fpath)
-		if err != nil {
+		if err := d.Grant(ctx, userID, "write"); err != nil {
 			return err
 		}
 
-		fmt.Printf("Add %s %s\n", key, info.Cid)
+		fmt.Println("grant write permission to user", userID)
+
 		return nil
 	},
 }
