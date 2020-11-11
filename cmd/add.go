@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/meowdada/ipfstor/drive"
-	"github.com/meowdada/ipfstor/ipfsutil"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/urfave/cli/v2"
 )
@@ -15,6 +14,10 @@ var addCmd = &cli.Command{
 	Aliases:   []string{"a"},
 	Usage:     "Add local file to the specific drive",
 	UsageText: "qpfs add <file> <resolve>",
+	Flags: []cli.Flag{
+		apiFlag,
+		dirFlag,
+	},
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 2 {
 			return fmt.Errorf("usage: qpfs add <file> <resolve>")
@@ -24,18 +27,19 @@ var addCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
 		var (
 			ctx     = c.Context
+			dir     = c.String("dir")
 			args    = c.Args().Slice()
 			fpath   = args[0]
 			resolve = args[1]
 		)
 
-		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
+		api, err := getAPI(c)
 		if err != nil {
 			return err
 		}
 
 		opts := options.OpenDrive().
-			SetDirectory(defaultOrbitDBPath())
+			SetDirectory(dir)
 
 		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {

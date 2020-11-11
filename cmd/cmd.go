@@ -6,6 +6,8 @@ import (
 	"os"
 	"sort"
 
+	coreiface "github.com/ipfs/interface-go-ipfs-core"
+	"github.com/meowdada/ipfstor/ipfsutil"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -21,6 +23,19 @@ var mainApp = &cli.App{
 		revokeCmd,
 		lsCmd,
 	},
+}
+
+var apiFlag = &cli.StringFlag{
+	Name:  "api",
+	Usage: "Endpoint `ADDRESS` to ipfs http client",
+	Value: ipfsutil.DefaultAPIAddress,
+}
+
+var dirFlag = &cli.StringFlag{
+	Name:    "dir",
+	Aliases: []string{"d"},
+	Usage:   "`DIR` to the local datastore",
+	Value:   defaultOrbitDBPath(),
 }
 
 // Main is the entrypoint
@@ -47,4 +62,9 @@ func setupZapLogger(w io.Writer, level zapcore.Level) *zap.Logger {
 
 	logger := zap.New(core)
 	return logger
+}
+
+func getAPI(c *cli.Context) (coreiface.CoreAPI, error) {
+	addr := c.String("api")
+	return ipfsutil.NewAPI(addr)
 }

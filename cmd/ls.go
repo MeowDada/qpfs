@@ -5,7 +5,6 @@ import (
 
 	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
-	"github.com/meowdada/ipfstor/ipfsutil"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/urfave/cli/v2"
 )
@@ -15,6 +14,10 @@ var lsCmd = &cli.Command{
 	Aliases:   []string{"l"},
 	Usage:     "List all existing file in the drive which matches given prefix",
 	UsageText: "qpfs ls <prefix>",
+	Flags: []cli.Flag{
+		apiFlag,
+		dirFlag,
+	},
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() > 2 || c.Args().Len() == 0 {
 			return fmt.Errorf("usage: qpfs ls <resolve> <prefix>")
@@ -24,6 +27,7 @@ var lsCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
 		var (
 			ctx     = c.Context
+			dir     = c.String("dir")
 			resolve = c.Args().First()
 			prefix  string
 		)
@@ -32,12 +36,15 @@ var lsCmd = &cli.Command{
 			prefix = c.Args().Slice()[1]
 		}
 
-		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
+		api, err := getAPI(c)
 		if err != nil {
 			return err
 		}
 
-		d, err := drive.Open(ctx, api, resolve, options.OpenDrive().SetDirectory(defaultOrbitDBPath()))
+		opts := options.OpenDrive().
+			SetDirectory(dir)
+
+		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {
 			return err
 		}

@@ -9,7 +9,6 @@ import (
 
 	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
-	"github.com/meowdada/ipfstor/ipfsutil"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli/v2"
@@ -21,14 +20,13 @@ func defaultOrbitDBPath() string {
 }
 
 var openCmd = &cli.Command{
-	Name:  "open",
-	Usage: "Open an existing drive by given name of the database or its address",
+	Name:      "open",
+	Aliases:   []string{"o"},
+	Usage:     "Open an existing drive by given name of the database or its address",
+	UsageText: "qpfs open <resolve>",
 	Flags: []cli.Flag{
-		&cli.StringFlag{
-			Name:    "dir",
-			Aliases: []string{"d"},
-			Usage:   "Path to directory that uses as a datastore",
-		},
+		apiFlag,
+		dirFlag,
 		&cli.BoolFlag{
 			Name:    "memory",
 			Aliases: []string{"m"},
@@ -49,7 +47,7 @@ var openCmd = &cli.Command{
 			memoryMode = c.Bool("memory")
 		)
 
-		api, err := ipfsutil.NewAPI(ipfsutil.DefaultAPIAddress)
+		api, err := getAPI(c)
 		if err != nil {
 			return err
 		}
