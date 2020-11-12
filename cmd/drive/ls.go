@@ -25,14 +25,15 @@ type ListDriveResult struct {
 func printListDriveResult(lrs []ListDriveResult) {
 	maxLen := 0
 	sort.Slice(lrs, func(i, j int) bool {
-		if maxLen < len(lrs[i].DBName) {
-			maxLen = len(lrs[i].DBName)
-		}
-		if maxLen < len(lrs[j].DBName) {
-			maxLen = len(lrs[j].DBName)
-		}
 		return lrs[i].DBName < lrs[j].DBName
 	})
+
+	for i := range lrs {
+		if len(lrs[i].DBName) > maxLen {
+			maxLen = len(lrs[i].DBName)
+		}
+	}
+
 	for i := range lrs {
 		format := "%-" + strconv.Itoa(maxLen) + "s %s\n"
 		fmt.Printf(format, lrs[i].DBName, lrs[i].DBAddr)

@@ -7,8 +7,9 @@ import (
 )
 
 var connectCmd = &cli.Command{
-	Name:  "connect",
-	Usage: "Connect to an existing peer",
+	Name:    "connect",
+	Aliases: []string{"c"},
+	Usage:   "Connect to an existing peer",
 	Flags: []cli.Flag{
 		apiFlag,
 	},

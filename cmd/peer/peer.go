@@ -26,6 +26,9 @@ var peerCmd = &cli.Command{
 	Usage: "Peer managment",
 	Subcommands: []*cli.Command{
 		connectCmd,
+		disconnectCmd,
+		addrCmd,
+		lsCmd,
 	},
 }
 

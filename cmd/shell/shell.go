@@ -3,6 +3,7 @@ package shell
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/dustin/go-humanize"
@@ -15,9 +16,10 @@ var App = &cli.Shell{
 	Commands: []*cli.Command{
 		lsCmd,
 		addrCmd,
+		addCmd,
+		getCmd,
 		exitCmd,
 		helpCmd,
-		addCmd,
 	},
 }
 
@@ -118,6 +120,51 @@ var addCmd = &cli.Command{
 		}
 
 		fmt.Printf("Add file %s (%s) as %s\n", f.Key, f.Cid, sizeToStr(f.Size))
+
+		return nil
+	},
+}
+
+var getCmd = &cli.Command{
+	Name:      "get",
+	Aliases:   []string{"g"},
+	Usage:     "Download file from the current drive",
+	UsageText: "get <key> <path>",
+	Before: func(c *cli.Context) error {
+		if len(c.Args()) != 2 {
+			return fmt.Errorf("usage: get <key> <path>")
+		}
+		return nil
+	},
+	Action: func(c *cli.Context) error {
+		var (
+			ctx  = c.Context()
+			args = c.Args()
+			key  = args[0]
+			path = args[1]
+		)
+
+		d, err := getDrive(c)
+		if err != nil {
+			return err
+		}
+
+		r, err := d.Get(ctx, key)
+		if err != nil {
+			return err
+		}
+
+		f, err := os.Create(path)
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(f, r)
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("Download %s to %s\n", key, path)
 
 		return nil
 	},
