@@ -42,8 +42,11 @@ func printListDriveResult(lrs []ListDriveResult) {
 var lsCmd = &cli.Command{
 	Name:  "ls",
 	Usage: "List all existing local drives",
+	Flags: []cli.Flag{
+		dirFlag,
+	},
 	Action: func(c *cli.Context) error {
-		root := defaultOrbitDBPath()
+		root := c.String("dir")
 
 		var lrs []ListDriveResult
 

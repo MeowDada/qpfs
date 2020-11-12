@@ -7,10 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"berty.tech/go-orbit-db/accesscontroller"
-	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
+	"github.com/meowdada/qpfs/cmd/shell"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli/v2"
 )
@@ -33,6 +32,11 @@ var openCmd = &cli.Command{
 			Aliases: []string{"m"},
 			Usage:   "Using memory mode to host the datastore",
 		},
+		&cli.BoolFlag{
+			Name:    "new",
+			Aliases: []string{"n"},
+			Usage:   "Create new database if it does not present",
+		},
 	},
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 1 {
@@ -42,90 +46,25 @@ var openCmd = &cli.Command{
 	},
 	Action: func(c *cli.Context) error {
 		var (
-			ctx        = c.Context
-			resolve    = c.Args().First()
-			dir        = c.String("dir")
-			memoryMode = c.Bool("memory")
+			ctx           = c.Context
+			resolve       = c.Args().First()
+			dir           = c.String("dir")
+			createNew     = c.Bool("new")
+			enableMemMode = c.Bool("memory")
 		)
+
+		if enableMemMode {
+			dir = ""
+		}
 
 		api, err := getAPI(c)
 		if err != nil {
 			return err
 		}
 
-		// Enable memory mode.
-		if memoryMode {
-			d, err := drive.Open(ctx, api, resolve)
-			if err != nil {
-				return err
-			}
-			defer d.Close(ctx)
-
-			fmt.Printf("Open drive: %s (memory mode)\n", d.Address())
-
-			scanner := bufio.NewScanner(os.Stdout)
-			for scanner.Scan() {
-				args := strings.Split(scanner.Text(), " ")
-				if len(args) == 0 {
-					fmt.Printf(`available commands:
-	- add   Add file into drive.
-	- ls    List all existing files.
-	- exit  Exit the cli program.
-`)
-					continue
-				}
-
-				cmd := args[0]
-				if cmd == "add" {
-					if len(args) == 2 {
-						fpath := args[1]
-						key := filepath.Base(fpath)
-						f, err := d.Add(ctx, key, fpath)
-						if err != nil {
-							return err
-						}
-						fmt.Printf("%s (%s): %s\n", f.Key, f.Cid, humanize.IBytes(uint64(f.Size)))
-					} else {
-						fmt.Println("usage: add <file>")
-					}
-				} else if cmd == "ls" {
-					prefix := ""
-					if len(args) == 2 {
-						prefix = args[1]
-					}
-					r, err := d.List(ctx, prefix)
-					if err != nil {
-						return err
-					}
-
-					fs := r.Files()
-					for i := range fs {
-						fmt.Printf("%s (%s): %s\n", fs[i].Key, fs[i].Cid, humanize.IBytes(uint64(fs[i].Size)))
-					}
-				} else if cmd == "exit" {
-					fmt.Println("exiting...")
-					return nil
-				} else {
-					fmt.Printf(`available commands:
-	- add   Add file into drive.
-	- ls    List all existing files.
-	- exit  Exit the cli program.
-`)
-				}
-			}
-
-			return nil
-		}
-
-		ac := &accesscontroller.CreateAccessControllerOptions{
-			Access: map[string][]string{
-				"write": []string{"*"},
-			},
-		}
-
 		opts := options.OpenDrive().
 			SetDirectory(dir).
-			SetAccessController(ac)
+			SetCreate(createNew)
 
 		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {
@@ -133,16 +72,33 @@ var openCmd = &cli.Command{
 		}
 		defer d.Close(ctx)
 
-		fmt.Printf("Open drive: %s\n", d.Address())
+		app := shell.App
+		app.Set("drive", d)
 
 		scanner := bufio.NewScanner(os.Stdout)
+
+		fmt.Printf("> ")
 		for scanner.Scan() {
-			args := strings.Split(scanner.Text(), " ")
-			if len(args) == 0 {
-				fmt.Println("")
+			text := scanner.Text()
+			args := strings.Split(text, " ")
+			err := app.Run(ctx, args)
+			if err == shell.ErrExitShell {
+				fmt.Println("exiting...")
+				return nil
 			}
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Printf("> ")
 		}
 
 		return nil
 	},
 }
+
+var shellHelpText = `Available commands:
+	- add    Add local file to current drive.
+	- ls     List all existing files of current drive.
+	- rm     Remove file from current drive.
+	- exit   Exit this interactive shell.
+`

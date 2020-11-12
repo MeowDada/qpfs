@@ -22,6 +22,7 @@ var mainApp = &cli.App{
 		grantCmd,
 		revokeCmd,
 		lsCmd,
+		rmCmd,
 	},
 }
 

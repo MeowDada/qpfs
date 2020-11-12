@@ -814,6 +814,10 @@ github.com/meowdada/ipfstor v0.1.0 h1:6h5rcxULJ87YTBxZkemmJqDYzEp9nb4gP5oI9/G1yA
 github.com/meowdada/ipfstor v0.1.0/go.mod h1:/FUGzN9dhpVrjAjvahKdN6sd0rkAgGKM4JJhp7P3Rpo=
 github.com/meowdada/ipfstor v0.1.1 h1:YL4I5WXBkJNJDNd3Qg9mEQ2owGfEybXgolkzCTT/lEA=
 github.com/meowdada/ipfstor v0.1.1/go.mod h1:/FUGzN9dhpVrjAjvahKdN6sd0rkAgGKM4JJhp7P3Rpo=
+github.com/meowdada/ipfstor v0.1.2 h1:aN6SY1VugtJezu0ybW3I3gsdwsxqDS6M3dsaCjLokZI=
+github.com/meowdada/ipfstor v0.1.2/go.mod h1:I6qPTRoBN7T9W3bAaBzZypVPy/JSQh02yv1ySfX0QTw=
+github.com/meowdada/ipfstor v0.1.3 h1:01q6zHH0+RpTGPt5dHE4VRBeQtQ91DOVpv4ErtyoBjs=
+github.com/meowdada/ipfstor v0.1.3/go.mod h1:I6qPTRoBN7T9W3bAaBzZypVPy/JSQh02yv1ySfX0QTw=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b/go.mod h1:01TrycV0kFyexm33Z7vhZRXopbI8J3TDReVlkTgMUxE=
 github.com/microcosm-cc/bluemonday v1.0.1/go.mod h1:hsXNsILzKxV+sX77C5b8FSuKF00vh2OMYv+xgHpAMF4=
 github.com/miekg/dns v1.1.4/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=

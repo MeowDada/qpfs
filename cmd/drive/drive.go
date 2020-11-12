@@ -17,7 +17,24 @@ var driveCmd = &cli.Command{
 	Usage: "Operations to interact with local drive",
 	Subcommands: []*cli.Command{
 		lsCmd,
+		rmCmd,
 	},
+}
+
+var dirFlag = &cli.StringFlag{
+	Name:    "dir",
+	Aliases: []string{"d"},
+	Usage:   "`DIR` to the local datastore",
+	Value:   defaultOrbitDBPath(),
+}
+
+type driveLocation struct {
+	Name string
+	Hash string
+}
+
+func (d *driveLocation) GetPath(root string) string {
+	return filepath.Join(root, d.Hash, d.Name)
 }
 
 func defaultOrbitDBPath() string {

@@ -2,25 +2,23 @@ package cmd
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/urfave/cli/v2"
 )
 
-var addCmd = &cli.Command{
-	Name:      "add",
-	Aliases:   []string{"a"},
-	Usage:     "Add local file to the specific drive",
-	UsageText: "qpfs add <resolve> <file>",
+var rmCmd = &cli.Command{
+	Name:      "rm",
+	Usage:     "remove file on spcific drive",
+	UsageText: "qpfs rm <drive> <key>",
 	Flags: []cli.Flag{
-		apiFlag,
 		dirFlag,
+		apiFlag,
 	},
 	Before: func(c *cli.Context) error {
 		if c.Args().Len() != 2 {
-			return fmt.Errorf("usage: qpfs add <resolve> <file>")
+			return fmt.Errorf("usage: qpfs rm <drive> <key>")
 		}
 		return nil
 	},
@@ -29,8 +27,8 @@ var addCmd = &cli.Command{
 			ctx     = c.Context
 			dir     = c.String("dir")
 			args    = c.Args().Slice()
-			fpath   = args[1]
 			resolve = args[0]
+			key     = args[1]
 		)
 
 		api, err := getAPI(c)
@@ -39,7 +37,8 @@ var addCmd = &cli.Command{
 		}
 
 		opts := options.OpenDrive().
-			SetDirectory(dir)
+			SetDirectory(dir).
+			SetCreate(false)
 
 		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {
@@ -47,13 +46,6 @@ var addCmd = &cli.Command{
 		}
 		defer d.Close(ctx)
 
-		key := filepath.Base(fpath)
-		info, err := d.Add(ctx, key, fpath)
-		if err != nil {
-			return err
-		}
-
-		fmt.Printf("Add %s %s\n", key, info.Cid)
-		return nil
+		return d.Remove(ctx, key)
 	},
 }
