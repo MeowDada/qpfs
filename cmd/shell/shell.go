@@ -56,9 +56,10 @@ var exitCmd = &cli.Command{
 }
 
 var lsCmd = &cli.Command{
-	Name:    "ls",
-	Aliases: []string{"l"},
-	Usage:   "List all existing file on this drive",
+	Name:      "ls",
+	Aliases:   []string{"l"},
+	Usage:     "List all existing file on this drive",
+	UsageText: "ls <prefix>",
 	Before: func(c *cli.Context) error {
 		if len(c.Args()) > 1 {
 			return fmt.Errorf("usage: ls <prefix>")
@@ -86,18 +87,16 @@ var lsCmd = &cli.Command{
 			return nil
 		}
 
-		for _, f := range lr.Files() {
-			fmt.Printf("%s (%s): %s\n", f.Key, f.Cid, sizeToStr(f.Size))
-		}
-
-		return nil
+		_, err = lr.WriteTo(os.Stdout)
+		return err
 	},
 }
 
 var addCmd = &cli.Command{
-	Name:    "add",
-	Aliases: []string{"a"},
-	Usage:   "Add local file to current drive",
+	Name:      "add",
+	Aliases:   []string{"a"},
+	Usage:     "Add local file to current drive",
+	UsageText: "add <key> <path>",
 	Before: func(c *cli.Context) error {
 		return nil
 	},

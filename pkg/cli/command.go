@@ -7,11 +7,12 @@ import (
 
 // Command represents a cli command.
 type Command struct {
-	Name    string
-	Aliases []string
-	Usage   string
-	Before  func(c *Context) error
-	Action  func(c *Context) error
+	Name      string
+	Aliases   []string
+	Usage     string
+	UsageText string
+	Before    func(c *Context) error
+	Action    func(c *Context) error
 }
 
 // Do process the input data.

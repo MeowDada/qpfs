@@ -10,7 +10,7 @@ import (
 
 var rmCmd = &cli.Command{
 	Name:      "rm",
-	Usage:     "remove file on spcific drive",
+	Usage:     "Remove file on spcific drive",
 	UsageText: "qpfs rm <drive> <key>",
 	Flags: []cli.Flag{
 		dirFlag,

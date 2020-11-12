@@ -5,7 +5,7 @@ import (
 )
 
 var defaultHelpTemplate = `COMMANDS:
-{{range .Commands}}	{{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }}{{end}}`
+{{range .Commands}}	{{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }} {{if .UsageText}} {{"\t\t\t"}}usage: {{.UsageText}}{{ "\n\n" }}{{end}} {{end}}`
 
 func indent(spaces int, v string) string {
 	pad := strings.Repeat(" ", spaces)

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"berty.tech/go-orbit-db/accesscontroller"
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/meowdada/qpfs/cmd/shell"
@@ -62,9 +63,16 @@ var openCmd = &cli.Command{
 			return err
 		}
 
+		ac := &accesscontroller.CreateAccessControllerOptions{
+			Access: map[string][]string{
+				"write": []string{"*"},
+			},
+		}
+
 		opts := options.OpenDrive().
 			SetDirectory(dir).
-			SetCreate(createNew)
+			SetCreate(createNew).
+			SetAccessController(ac)
 
 		d, err := drive.Open(ctx, api, resolve, opts)
 		if err != nil {

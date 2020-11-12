@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
 	"github.com/urfave/cli/v2"
@@ -55,10 +55,8 @@ var lsCmd = &cli.Command{
 			return err
 		}
 
-		fs := lr.Files()
-
-		for i := range fs {
-			fmt.Printf("%s (%s): %s\n", fs[i].Key, fs[i].Cid, humanize.IBytes(uint64(fs[i].Size)))
+		if _, err := lr.WriteTo(os.Stdout); err != nil {
+			return err
 		}
 
 		return nil
