@@ -5,6 +5,7 @@ import (
 
 	// Import subcommands.
 	_ "github.com/meowdada/qpfs/cmd/drive"
+	_ "github.com/meowdada/qpfs/cmd/peer"
 )
 
 var Version string
