@@ -14,8 +14,10 @@ import (
 var App = &cli.Shell{
 	Commands: []*cli.Command{
 		lsCmd,
+		addrCmd,
 		exitCmd,
 		helpCmd,
+		addCmd,
 	},
 }
 
@@ -28,6 +30,20 @@ var helpCmd = &cli.Command{
 	Usage:   "Show usage help text",
 	Action: func(c *cli.Context) error {
 		return c.Shell().WriteUsage(os.Stdout)
+	},
+}
+
+var addrCmd = &cli.Command{
+	Name:  "addr",
+	Usage: "Show the address of current drive",
+	Action: func(c *cli.Context) error {
+		d, err := getDrive(c)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(d.Address())
+		return nil
 	},
 }
 
@@ -65,9 +81,44 @@ var lsCmd = &cli.Command{
 			return err
 		}
 
+		if len(lr.Files()) == 0 {
+			fmt.Println("empty result")
+			return nil
+		}
+
 		for _, f := range lr.Files() {
 			fmt.Printf("%s (%s): %s\n", f.Key, f.Cid, sizeToStr(f.Size))
 		}
+
+		return nil
+	},
+}
+
+var addCmd = &cli.Command{
+	Name:    "add",
+	Aliases: []string{"a"},
+	Usage:   "Add local file to current drive",
+	Before: func(c *cli.Context) error {
+		return nil
+	},
+	Action: func(c *cli.Context) error {
+		var (
+			ctx   = c.Context()
+			key   = c.Args()[0]
+			fpath = c.Args()[1]
+		)
+
+		d, err := getDrive(c)
+		if err != nil {
+			return err
+		}
+
+		f, err := d.Add(ctx, key, fpath)
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("Add file %s (%s) as %s\n", f.Key, f.Cid, sizeToStr(f.Size))
 
 		return nil
 	},
