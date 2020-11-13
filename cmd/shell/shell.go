@@ -15,6 +15,7 @@ import (
 var App = &cli.Shell{
 	Commands: []*cli.Command{
 		lsCmd,
+		rmCmd,
 		addrCmd,
 		addCmd,
 		getCmd,
@@ -94,12 +95,46 @@ var lsCmd = &cli.Command{
 	},
 }
 
+var rmCmd = &cli.Command{
+	Name:      "rm",
+	Aliases:   []string{"r"},
+	Usage:     "Remove file on the current drive",
+	UsageText: "rm <key>",
+	Before: func(c *cli.Context) error {
+		return nil
+	},
+	Action: func(c *cli.Context) error {
+		var (
+			ctx  = c.Context()
+			args = c.Args()
+		)
+
+		d, err := getDrive(c)
+		if err != nil {
+			return err
+		}
+
+		for i := range args {
+			if err := d.Remove(ctx, args[i]); err != nil {
+				fmt.Printf("remove %s with error: %v\n", args[i], err)
+				continue
+			}
+			fmt.Printf("remove %s successfully\n", args[i])
+		}
+
+		return nil
+	},
+}
+
 var addCmd = &cli.Command{
 	Name:      "add",
 	Aliases:   []string{"a"},
 	Usage:     "Add local file to current drive",
 	UsageText: "add <key> <path>",
 	Before: func(c *cli.Context) error {
+		if len(c.Args()) != 2 {
+			return fmt.Errorf("usage: add <key> <path>")
+		}
 		return nil
 	},
 	Action: func(c *cli.Context) error {
