@@ -8,8 +8,10 @@ import (
 	_ "github.com/meowdada/qpfs/cmd/peer"
 )
 
-var Version string
+var (
+	version string
+)
 
 func main() {
-	cmd.Main(Version)
+	cmd.Main(version)
 }
