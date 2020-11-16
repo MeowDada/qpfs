@@ -3,6 +3,7 @@ package peer
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/meowdada/ipfstor/ipfsutil"
 	"github.com/meowdada/qpfs/cmd"
+	"github.com/mitchellh/go-homedir"
 	ma "github.com/multiformats/go-multiaddr"
 	madns "github.com/multiformats/go-multiaddr-dns"
 	"github.com/urfave/cli/v2"
@@ -28,6 +30,7 @@ var peerCmd = &cli.Command{
 		connectCmd,
 		disconnectCmd,
 		addrCmd,
+		addCmd,
 		lsCmd,
 	},
 }
@@ -36,6 +39,18 @@ var apiFlag = &cli.StringFlag{
 	Name:  "api",
 	Usage: "Endpoint `ADDRESS` to ipfs http client",
 	Value: ipfsutil.DefaultAPIAddress,
+}
+
+var dirFlag = &cli.StringFlag{
+	Name:    "dir",
+	Aliases: []string{"d"},
+	Usage:   "`DIR` to the local datastore",
+	Value:   defaultOrbitDBPath(),
+}
+
+func defaultOrbitDBPath() string {
+	dir, _ := homedir.Dir()
+	return filepath.Join(dir, ".orbitdb")
 }
 
 func getAPI(c *cli.Context) (coreiface.CoreAPI, error) {

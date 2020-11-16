@@ -90,8 +90,9 @@ var lsCmd = &cli.Command{
 			return nil
 		}
 
-		_, err = lr.WriteTo(os.Stdout)
-		return err
+		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskTime)
+		fmt.Println(string(b))
+		return nil
 	},
 }
 

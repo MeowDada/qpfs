@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/meowdada/ipfstor/drive"
 	"github.com/meowdada/ipfstor/options"
@@ -55,10 +54,8 @@ var lsCmd = &cli.Command{
 			return err
 		}
 
-		if _, err := lr.WriteTo(os.Stdout); err != nil {
-			return err
-		}
-
+		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskTime)
+		fmt.Println(string(b))
 		return nil
 	},
 }

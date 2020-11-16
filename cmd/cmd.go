@@ -18,6 +18,7 @@ var mainApp = &cli.App{
 	Usage: "A cli tool to interact with ipfs drive",
 	Commands: []*cli.Command{
 		openCmd,
+		mountCmd,
 		addCmd,
 		getCmd,
 		grantCmd,
