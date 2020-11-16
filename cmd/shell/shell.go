@@ -150,7 +150,7 @@ var addCmd = &cli.Command{
 			return err
 		}
 
-		f, err := d.Add(ctx, key, fpath)
+		f, err := d.AddFile(ctx, key, fpath)
 		if err != nil {
 			return err
 		}

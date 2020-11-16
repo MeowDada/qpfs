@@ -48,6 +48,12 @@ var mountCmd = &cli.Command{
 		}
 		defer d.Close(ctx)
 
-		return fs.Mount(mountpoint, d)
+		unmount, err := fs.Mount(mountpoint, d)
+		if err != nil {
+			return err
+		}
+
+		defer unmount()
+		return nil
 	},
 }

@@ -48,7 +48,7 @@ var addCmd = &cli.Command{
 		defer d.Close(ctx)
 
 		key := filepath.Base(fpath)
-		info, err := d.Add(ctx, key, fpath)
+		info, err := d.AddFile(ctx, key, fpath)
 		if err != nil {
 			return err
 		}
