@@ -54,7 +54,7 @@ var lsCmd = &cli.Command{
 			return err
 		}
 
-		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskTime)
+		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskOwner)
 		fmt.Println(string(b))
 		return nil
 	},

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/dustin/go-humanize"
 	"github.com/meowdada/ipfstor/drive"
@@ -90,7 +91,7 @@ var lsCmd = &cli.Command{
 			return nil
 		}
 
-		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskTime)
+		b := lr.Bytes(drive.ListMaskKey | drive.ListMaskSize | drive.ListMaskOwner)
 		fmt.Println(string(b))
 		return nil
 	},
@@ -150,12 +151,15 @@ var addCmd = &cli.Command{
 			return err
 		}
 
+		start := time.Now()
+
 		f, err := d.AddFile(ctx, key, fpath)
 		if err != nil {
 			return err
 		}
 
 		fmt.Printf("Add file %s (%s) as %s\n", f.Key, f.Cid, sizeToStr(f.Size))
+		fmt.Printf("	Total spent: %v\n", time.Since(start))
 
 		return nil
 	},
@@ -185,6 +189,8 @@ var getCmd = &cli.Command{
 			return err
 		}
 
+		start := time.Now()
+
 		r, err := d.Get(ctx, key)
 		if err != nil {
 			return err
@@ -201,6 +207,7 @@ var getCmd = &cli.Command{
 		}
 
 		fmt.Printf("Download %s to %s\n", key, path)
+		fmt.Printf("	Total Spent: %v\n", time.Since(start))
 
 		return nil
 	},
