@@ -7,7 +7,10 @@ all:
 	@$(GOBIN) build -ldflags "-X main.version=`git rev-parse HEAD`"
 
 build_win:
-	@GOOS=windows GOARCH=amd64 $(GOBIN) build -ldflags "-X main.version=`git rev-parse HEAD`" 
+	@GOOS=windows GOARCH=amd64 $(GOBIN) build -ldflags "-X main.version=`git rev-parse HEAD`"
+
+build_arm64:
+	@GOOS=linux GOARCH=arm64 $(GOBIN) build -ldflags "-X main.version=`git rev-parse HEAD`"
 
 clean:
 	rm -f $(TARGET)
