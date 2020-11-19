@@ -20,8 +20,40 @@ docker run -d \
     ipfs/go-ipfs:latest
 ```
 
-## Build
+## Build from source
+Get the repo to local:
+
+```bash
+git clone https://github.com/meowdada/qpfs
+```
+
+go to the repo directory
+```
+cd qpfs
+```
+
 Install the qpfs binary.
 ```bash
 go install -ldflags "-X main.version=`git rev-parse HEAD`"
+```
+## Build by docker
+Get the repo to local:
+
+```bash
+git clone https://github.com/meowdada/qpfs
+```
+
+go to the repo directory
+```
+cd qpfs
+```
+
+Build the docker image
+```bash
+docker build -t qpfs-build .
+```
+
+Run the image
+```bash
+docker run --rm -v <dir-to-output>:/data qpfs-build
 ```
