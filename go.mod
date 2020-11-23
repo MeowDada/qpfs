@@ -10,6 +10,7 @@ require (
 	github.com/ipfs/go-ipfs v0.6.0
 	github.com/ipfs/go-ipfs-http-client v0.1.0
 	github.com/ipfs/interface-go-ipfs-core v0.4.0
+	github.com/ipfs/ipfs-cluster v0.13.0
 	github.com/libp2p/go-libp2p-core v0.6.1
 	github.com/libp2p/go-libp2p-peer v0.2.0
 	github.com/meowdada/ipfstor v0.2.3

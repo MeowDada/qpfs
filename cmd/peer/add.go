@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	peer "github.com/libp2p/go-libp2p-core/peer"
+	ipfscluster "github.com/ipfs/ipfs-cluster"
 	"github.com/meowdada/ipfstor/cluster"
 	"github.com/mitchellh/go-homedir"
+	ma "github.com/multiformats/go-multiaddr"
 	"github.com/urfave/cli/v2"
 )
 
@@ -37,25 +38,18 @@ var addCmd = &cli.Command{
 			return err
 		}
 
-		ids, err := cls.Peers(ctx)
-		if err != nil {
-			return err
-		}
-
-		for _, id := range ids {
-			fmt.Println(id.ID)
-		}
-
 		for _, p := range args {
-			id, err := peer.Decode(p)
+			addr, err := ma.NewMultiaddr(p)
 			if err != nil {
-				fmt.Printf("Parse peer ID from string %s with error: %v\n", p, err)
-				return err
+				fmt.Printf("Parse multiaddr from %s with error: %v\n", p, err)
+				continue
 			}
 
-			_, err = cls.PeerAdd(ctx, id)
+			ids := ipfscluster.PeersFromMultiaddrs([]ma.Multiaddr{addr})
+
+			_, err = cls.PeerAdd(ctx, ids[0])
 			if err != nil {
-				fmt.Printf("Add peer %v with error: %v\n", id.String(), err)
+				fmt.Printf("Add peer %v with error: %v\n", p, err)
 			}
 		}
 
