@@ -4,6 +4,7 @@ import (
 	"github.com/meowdada/qpfs/cmd"
 
 	// Import subcommands.
+	_ "github.com/meowdada/qpfs/cmd/cluster"
 	_ "github.com/meowdada/qpfs/cmd/drive"
 	_ "github.com/meowdada/qpfs/cmd/key"
 	_ "github.com/meowdada/qpfs/cmd/peer"
