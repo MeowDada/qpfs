@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"fmt"
+	"strings"
 
 	cls "github.com/meowdada/ipfstor/cluster"
 	"github.com/meowdada/ipfstor/options"
@@ -25,17 +26,35 @@ var initCmd = &cli.Command{
 			Aliases: []string{"s"},
 			Usage:   "Sets a secret key of the cluster",
 		},
+		&cli.StringFlag{
+			Name:    "peers",
+			Aliases: []string{"p"},
+			Usage:   "List of address of trusted peers. Seperate by comma",
+		},
+		&cli.StringFlag{
+			Name:  "url",
+			Usage: "Source url",
+		},
 	},
 	Action: func(c *cli.Context) error {
 		ctx := c.Context
 		configPath, identityPath := getConfigs(c)
 		useRandomPorts := c.Bool("random-ports")
 		secret := c.String("secret")
+		peerStr := c.String("peers")
+		srcURL := c.String("url")
+
+		peers := strings.Split(peerStr, ",")
+		if len(peerStr) == 0 {
+			peers = nil
+		}
 
 		if err := cls.NewConfig(ctx, options.Cluster().
 			SetConfigPath(configPath).
 			SetIdentityPath(identityPath).
+			SetPeerAddr(peers...).
 			SetRandomPorts(useRandomPorts).
+			SetSourceURL(srcURL).
 			SetSecret(secret),
 		); err != nil {
 			return err
